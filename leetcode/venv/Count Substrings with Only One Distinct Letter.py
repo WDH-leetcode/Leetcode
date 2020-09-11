@@ -1,2 +1,2 @@
-s = 'aaab'
-print(s[1:1])
+s = 'babad'
+print(s[:2:-1])

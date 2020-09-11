@@ -41,11 +41,12 @@ w2 = wpinv(arr2)
 w3 = wpinv(arr3)
 w7 = wpinv(arr7)
 w10 = wpinv(arr10)
-#print(w1)
-#print(w2)
-#print(w3)
+print(w1)
+print(w2)
+print(w3)
+print(w7)
+print(w10)
 
-#print((yt - np.dot(arr1, w1)))
 # e
 
 
@@ -76,6 +77,7 @@ arr2_test = fib(2, x_test)
 arr3_test = fib(3, x_test)
 arr7_test = fib(7, x_test)
 arr10_test = fib(10, x_test)
+print(mse(w1, arr1_test, y_test), mse(w2, arr2_test, y_test), mse(w3, arr3_test, y_test), mse(w7, arr7_test, y_test), mse(w10, arr10_test, y_test))
 d_array_test = [mse(w1, arr1_test, y_test), mse(w2, arr2_test, y_test), mse(w3, arr3_test, y_test), mse(w7, arr7_test, y_test), mse(w10, arr10_test, y_test)]
 plt.figure(3)
 plt.plot(x_label, d_array_test)
@@ -88,6 +90,7 @@ w_list = list()
 for i in lam:
     w = np.dot(np.dot(np.linalg.inv(np.dot(i, I) + np.dot(np.transpose(arr7), arr7)), np.transpose(arr7)), yt)
     w_list.append(w)
+print(w_list)
 
 # h
 
