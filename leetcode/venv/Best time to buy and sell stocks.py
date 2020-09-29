@@ -9,4 +9,4 @@ class Solution:
                 dip = prices[i]
             else:
                 profit = max(profit, prices[i] - dip)
-        return profit 
+        return profit

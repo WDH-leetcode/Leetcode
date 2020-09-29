@@ -1,2 +1,2 @@
-string = '123'
-print(string[0])
+for i in range(0, 5):
+    print(-1-i)

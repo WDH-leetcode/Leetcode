@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="29b3f8ac-9911-4be8-bf59-ba37e6a2bfb9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Best time to buy and sell stocks.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Best time to buy and sell stocks.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/venv/TEST.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/TEST.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -38,7 +39,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Best time to buy and sell stocks">
+  <component name="RunManager" selected="Python.TEST">
     <configuration name="Best time to buy and sell stocks" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="leetcode" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -146,8 +147,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.Best time to buy and sell stocks" />
         <item itemvalue="Python.TEST" />
+        <item itemvalue="Python.Best time to buy and sell stocks" />
         <item itemvalue="Python.Find First and Last Position of Element in Sorted Array" />
         <item itemvalue="Python.Subsets" />
         <item itemvalue="Python.Count Substrings with Only One Distinct Letter" />
