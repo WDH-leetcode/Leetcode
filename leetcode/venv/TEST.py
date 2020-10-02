@@ -1,2 +1,4 @@
-for i in range(0, 5):
-    print(-1-i)
+import numpy as np
+a = [1, 2, 3, 4, 5]
+a_mean = sum(a)/len(a)
+print(np.transpose(a)- a_mean)

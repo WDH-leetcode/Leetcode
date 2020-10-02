@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a106e243-8d26-46da-bd2c-1d6a91658469" name="Default Changelist" comment="" />
+    <list default="true" id="a106e243-8d26-46da-bd2c-1d6a91658469" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/HW4_EE660.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../leetcode/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../leetcode/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../leetcode/venv/TEST.py" beforeDir="false" afterPath="$PROJECT_DIR$/../leetcode/venv/TEST.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +41,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.HW2_code">
+  <component name="RunManager" selected="Python.HW4_EE660">
     <configuration name="HW1_code" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="EE660" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -79,6 +84,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="HW4_EE660" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="EE660" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/HW4_EE660.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="TEST" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="EE660" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -102,8 +128,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.HW2_code" />
+        <item itemvalue="Python.HW4_EE660" />
         <item itemvalue="Python.TEST" />
+        <item itemvalue="Python.HW2_code" />
         <item itemvalue="Python.HW1_code" />
       </list>
     </recent_temporary>

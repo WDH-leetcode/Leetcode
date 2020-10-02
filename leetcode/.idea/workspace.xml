@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="29b3f8ac-9911-4be8-bf59-ba37e6a2bfb9" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../EE660/HW4_EE660.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EE660/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../EE660/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Best time to buy and sell stocks.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Best time to buy and sell stocks.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/venv/TEST.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/TEST.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
