@@ -1,3 +1,4 @@
-stack = ['1','2','3']
-x = ''.join(stack)
-print('a'.isdigit)
+iteration = 0
+for i in range(1, 5):
+    print(iteration)
+    iteration += 1
