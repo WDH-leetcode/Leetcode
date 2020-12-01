@@ -3,6 +3,7 @@ import scipy.special as ss
 import numpy as np
 import sklearn.preprocessing
 import sklearn.model_selection
+import matplotlib.pyplot as plt
 
 file_handle = io.loadmat('imagenet_data.mat')
 # features and labels
@@ -28,7 +29,6 @@ for i in range(len(features)):
     super_features.append(np.append(features[i], np.array([1]),))
 
 # random select test and training samples
-
 def softmax_loss_naive(W, X, y, reg):
     """
     Softmax loss function, naive implementation (with loops)
@@ -45,7 +45,7 @@ def softmax_loss_naive(W, X, y, reg):
     # Initialize the loss and gradient to zero.
     loss = 0.0
     dW = np.zeros_like(W)
-
+    l_w = np.zeros_like(W)
     #############################################################################
     # Compute the softmax loss and its gradient using explicit loops.           #
     # Store the loss in loss and the gradient in dW. If you are not careful     #
@@ -78,31 +78,30 @@ def softmax_loss_naive(W, X, y, reg):
         for j in range(num_classes):
             p = np.exp(f_i[j])/sum_i
             dW[j, :] += (p-(j == y[i])) * X[:, i]
-
     # Compute average
     loss /= num_train
     dW /= num_train
 
     # Regularization
-    loss += 0.5 * reg * np.sum(W * W)
+    loss += 0.5 * reg * np.linalg.norm(W, ord='fro')**2
     dW += reg*W
-
     return loss, dW
 
 for in_ in range(1,2):
     # random select test and training samples
     X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(super_features, labels, test_size=100)
     # initialize w
-    w = np.ones((10, 2049))
+    w = np.random.rand(10, 2049)
 
 
     X_train = np.transpose(X_train)
     y_train = y_train.astype(int)
     iteration = 0
-    while iteration < 500:
+    while iteration < 1:
         l, dw = softmax_loss_naive(w, X_train, y_train, 0.1)
+        print(l)
         w -= 0.01 * dw
-        print(0.01*dw)
+        #print(0.01*dw)
         iteration += 1
 
 
@@ -125,18 +124,68 @@ for in_ in range(1,2):
     print('trial{} error rate is {}%'.format(in_, error))
 
 
+### C
+tot_iteration = 0
+for i in range(1, 2):
+    X_train, X_test, y_train, y_test = \
+        sklearn.model_selection.train_test_split(super_features, labels, test_size=100)
+    # initialize w
+    w = np.random.rand(10, 2049)
+    X_train = np.transpose(X_train)
+    y_train = y_train.astype(int)
+    iteration = 0
+    gradient_descent_lst = []
+    while True:
+        l, dw= softmax_loss_naive(w, X_train, y_train, 0.1)
+        w -= 0.01 * dw
+        fro_squared = np.linalg.norm(dw, ord='fro')**2
+        print(fro_squared/(1+abs(l)))
+        if iteration <= 150:
+            gradient_descent_lst.append(fro_squared/(1+abs(l)))
+        if fro_squared/(1+abs(l)) <= 0.01:
+            break
+        iteration += 1
+
+    tot_iteration += iteration
+    print('trail{}, iteration took {}'.format(i, iteration))
+
+print('average iteration took {}'.format(tot_iteration/10))
+
+### D
+# heavy ball
+tot_iteration = 0
+for i in range(1, 2):
+    beta = 0.01
+    X_train, X_test, y_train, y_test = \
+        sklearn.model_selection.train_test_split(super_features, labels, test_size=100)
+    iteration = 0
+    w = np.random.rand(10, 2049)
+    X_train = np.transpose(X_train)
+    y_train = y_train.astype(int)
+    heavy_ball_lst = []
+    while True:
+        l, dw = softmax_loss_naive(w, X_train, y_train, 0.1)
+        if iteration >= 1:
+            diff = dw - d_w
+            d_w = dw
+        else:
+            d_w = dw
+            diff = 0
+        w -= 0.01 * dw - beta * diff
+        fro_squared = np.linalg.norm(dw, ord='fro') ** 2
+        print(fro_squared / (1 + abs(l)))
+        if iteration <= 150:
+            heavy_ball_lst.append(fro_squared/(1+abs(l)))
+        if fro_squared / (1 + abs(l)) <= 0.01:
+            break
+        iteration += 1
+    print(iteration)
 
 
-
-
-
-
-
-
-
-
-
-
-
+plt.figure()
+t = np.linspace(1, 150, 150)
+plt.plot(t, heavy_ball_lst)
+plt.plot(t, gradient_descent_lst)
+plt.show()
 
 

@@ -9,6 +9,8 @@ from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.mixture import BayesianGaussianMixture
+import joblib
+from sklearn.preprocessing import PolynomialFeatures
 
 f_handle = pandas.read_csv('credit_train.csv')
 N = f_handle.shape[0]
@@ -71,7 +73,7 @@ missing_columns = ['Credit Score', 'Annual Income', 'Years in current job', 'Ban
 # deterministic regression imputation
 
 
-def random_imputation(df, feature):
+'''def random_imputation(df, feature):
     number_missing = df[feature].isnull().sum()
     observed_values = df.loc[df[feature].notnull(), feature]
     df.loc[df[feature].isnull(), feature + '_imp'] = np.random.choice(observed_values, number_missing, replace=True)
@@ -80,44 +82,44 @@ def random_imputation(df, feature):
 
 for feature in missing_columns:
     X_train[feature + '_imp'] = X_train[feature]
-    X_train = random_imputation(X_train, feature)
-
-
+    X_train = random_imputation(X_train, feature)'''
+X_train_para = {}
 deter_data = pandas.DataFrame(columns=['Det' + name for name in missing_columns])
 for feature in missing_columns:
-    deter_data['Det'+feature] = X_train[feature+'_imp']
-    parameters = list(set(X_train.columns) - set(missing_columns) - {feature+'_imp'})
-
+    deter_data['Det'+feature] = X_train[feature]
+    parameters = list(set(X_train.columns) - set(missing_columns) - {feature})
+    X_train_para[feature] = parameters
     model = linear_model.LinearRegression()
-    model.fit(X=X_train[parameters], y=X_train[feature+'_imp'])
-
+    X_train_drop = X_train[parameters].drop(X_train[feature].index[X_train[feature].apply(np.isnan)])
+    model.fit(X=X_train_drop, y=X_train[feature].drop(X_train[feature].index[X_train[feature].apply(np.isnan)]))
+    filename = '{}_data.sav'.format(feature)
+    joblib.dump(model, filename) # save prediction model for test data
     deter_data.loc[X_train[feature].isnull(), 'Det' + feature] = \
         model.predict(X_train[parameters])[X_train[feature].isnull()]
-
 # finish filling missing data put predict values back to X_train
 for feature in missing_columns:
     X_train[feature] = deter_data['Det' + feature]
+#print(X_train['Credit Score'])
 #mno.matrix(X_train, figsize = (20,16))
 #plt.show()
 
 # assign Charged Off as 0, Fully Paid as 1
-'''y_label = []
-for label in y_train:
-    if label == 'Paid Off':
-        y_label.append(1)
-    else:
-        y_label.append(0)'''
 label_cleanup = {'Fully Paid': 1, 'Charged Off': 0}
 y_train.replace(label_cleanup, inplace=True)
 
 # normalization
 # normalize all numeric data
+col_min = {}
+col_max = {}
 cols_to_norm = ['Current Loan Amount', 'Credit Score', 'Annual Income', 'Monthly Debt', 'Current Credit Balance',
                 'Maximum Open Credit']
+# store max and min for columns that need to be normalized for test data
+for col in cols_to_norm:
+    col_min[col] = X_train[col].min()
+    col_max[col] = X_train[col].max()
 X_train[cols_to_norm] = X_train[cols_to_norm].apply(lambda x: (x - x.min())/(x.max()-x.min()))
 
-
-
+                                        ### Training
                     ### Now we are ready to test out different machine learning algorithms
 
 # in mind: logistic regression, random forest, SVM
@@ -126,13 +128,15 @@ kf = StratifiedKFold(n_splits=5)
 error = 0
 lr_error = 0
 rf_error = 0
+knn_error = 0
+EM_error = 0
 iteration = 1
 for train_index, test_index in kf.split(X_train, y_train):
     X_cv_train, X_cv_test = X_train.iloc[train_index], X_train.iloc[test_index]
     y_cv_train, y_cv_test = y_train.iloc[train_index], y_train.iloc[test_index]
 
     # logistic regression
-    lr_clf = LogisticRegression()
+    lr_clf = LogisticRegression(max_iter=1000)
     lr_clf.fit(X_cv_train, y_cv_train)
     y_pred = lr_clf.predict(X_cv_test)
     y_cv_test_lst = y_cv_test.values.tolist()
@@ -144,33 +148,20 @@ for train_index, test_index in kf.split(X_train, y_train):
     print('interation{} \nlogistic regression accuracy {}%'.format(iteration, (1-error/len(y_pred))*100))
     lr_error += error
 
-    ''''# SVM
-    clf = SVC(kernel='poly')
-    clf.fit(X_cv_train, y_cv_train)
-    y_pred = clf.predict(X_cv_test)
-    y_cv_test_lst = y_cv_test.values.tolist()
-
-    error_svm = 0
-    sum_error_svm = 0
-    for i in range(len(y_pred)):
-        if y_pred[i] != y_cv_test_lst[i]:
-            error_svm += 1
-    sum_error_svm += error_svm
-    print(error_svm/len(y_pred))'''
-
 
     # random forest
     error = 0
-    clf = RandomForestClassifier()
-    clf.fit(X_cv_train, y_cv_train)
-    y_pred = clf.predict(X_cv_test)
+    rf_clf = RandomForestClassifier()
+    rf_clf.fit(X_cv_train, y_cv_train)
+    y_pred = rf_clf.predict(X_cv_test)
     y_cv_test_lst = y_cv_test.values.tolist()
     for i in range(len(y_pred)):
         if y_pred[i] != y_cv_test_lst[i]:
             error += 1
-    print('ramdom forest accuracy {}%'.format((1-error/len(y_pred))*100))
+    rf_error += error
+    print('random forest accuracy {}%'.format((1-error/len(y_pred))*100))
 
-    ''''# k nearest neighbor
+    # k nearest neighbor
     error_knn = 0
     neigh = KNeighborsClassifier(n_neighbors=5)
     neigh.fit(X_cv_train, y_cv_train)
@@ -179,10 +170,11 @@ for train_index, test_index in kf.split(X_train, y_train):
     for i in range(len(y_pred)):
         if y_pred[i] != y_cv_test_lst[i]:
             error_knn += 1
-    print(error_knn / len(y_pred))'''
+    knn_error += error_knn
+    print('k nearest neighbor accuracy {}%'.format((1-error_knn/len(y_pred))*100))
 
     # Gaussian Mixture Model
-    '''error_GM = 0
+    error_GM = 0
     g = BayesianGaussianMixture(n_components=2)
     g.fit(X_cv_train, y_cv_train)
     y_pred = g.predict(X_cv_test)
@@ -190,9 +182,59 @@ for train_index, test_index in kf.split(X_train, y_train):
     for i in range(len(y_pred)):
         if y_pred[i] != y_cv_test_lst[i]:
             error_GM += 1
-    print(error_GM / len(y_pred))'''
+    EM_error += error_GM
+    print('EM estimator accuracy {}%'.format((1-error_GM/len(y_pred))*100))
     iteration += 1
     
 print('\n\nlogisitc regression average error {}%, accuracy is {}%'.format(lr_error/5/len(y_pred)*100, (1-(lr_error/5/len(y_pred)))*100 ))
-print('random forest average error {}%, accuracy is {}')
+print('random forest average error {}%, accuracy is {}%'.format(rf_error/5/len(y_pred)*100, (1-(rf_error/5/len(y_pred)))*100 ))
+print('k nearest neighbor average error {}%, accuracy is {}%'.format(knn_error/5/len(y_pred)*100, (1-(knn_error/5/len(y_pred)))*100 ))
+print('EM estimator average error {}%, accuracy is {}%'.format(EM_error/5/len(y_pred)*100, (1-(EM_error/5/len(y_pred)))*100 ))
+joblib.dump(lr_clf, filename='logistic regression_model.sav')
+joblib.dump(rf_clf, filename='random forest_model.sav')
+joblib.dump(neigh, filename='k nearest neighbor_model.sav')
+joblib.dump(g, filename='EM estimation_model.sav')
+
+
+                                            ### TEST
+# random forest and logistic regression has the comparable accuracy, but logistic regression runs faster
+# Preprocessing using parameters from x_train
+X_test = X_test.drop(['Purpose', 'Months since last delinquent'], axis=1)
+X_test = X_test.iloc[:, 2:]
+# Construct y_train
+y_test = X_test.iloc[:, 0]
+X_test = X_test.iloc[:, 1:]
+
+# replace categorical data with numeric values
+X_test.replace(cleanup_data, inplace=True)
+
+# fill in missing data according to the parameters from training
+missing_columns = ['Credit Score', 'Annual Income', 'Years in current job', 'Bankruptcies', 'Maximum Open Credit',
+                   'Tax Liens']
+for feature in missing_columns:
+    filesaved = '{}_data.sav'.format(feature)
+    loaded_model = joblib.load(filesaved)
+    X_test.loc[X_test[feature].isnull(), feature] = \
+        loaded_model.predict(X_test[X_train_para[feature]])[X_test[feature].isnull()]
+
+# normalize test according to training parameters
+cols_to_norm = ['Current Loan Amount', 'Credit Score', 'Annual Income', 'Monthly Debt', 'Current Credit Balance',
+                'Maximum Open Credit']
+for col in cols_to_norm:
+    X_test[col] = X_test[col].apply(lambda x: (x - col_min[col])/(col_max[col]-col_min[col]))
+
+# assign y_test to 0 and 1 for comparison
+label_cleanup = {'Fully Paid': 1, 'Charged Off': 0}
+y_test.replace(label_cleanup, inplace=True)
+
+## load prediction model: logistic regression
+y_pred = lr_clf.predict(X_test)
+y_test_lst = y_test.values.tolist()
+
+error = 0
+for i in range(len(y_pred)):
+    if y_pred[i] != y_test_lst[i]:
+        error += 1
+print(error)
+print('\nlogistic regression accuracy on test set {}%'.format((1 - error / len(y_pred)) * 100))
 
