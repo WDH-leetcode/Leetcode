@@ -18,11 +18,15 @@ D = f_handle.shape[1]
 
 
 
+
                                         ### Split the data
 # split the data into train and test first  ---> 10% test and 90% training
 f_handle.drop(f_handle.tail(514).index, inplace=True)
-X_test = f_handle.iloc[:N//10, :]
-X_train = f_handle.iloc[N//10:, :]
+X_pre = f_handle.iloc[:N//20, :]
+X_test = f_handle.iloc[N//20:int((1.5*N)//10), :]
+X_train = f_handle.iloc[int((1.5*N)//10):, :]
+name_lst = f_handle.columns
+
 
 
 
@@ -30,7 +34,7 @@ X_train = f_handle.iloc[N//10:, :]
 
                                          ### PREPROCESSING
 # inspect the training data
-#print(X_train.head())
+print(len(f_handle))
 # get the feature names
 name_lst = f_handle.columns
 #print(name_lst)
@@ -39,7 +43,7 @@ X_train = X_train.iloc[:, 2:]
 # Construct y_train
 y_train = X_train.iloc[:, 0]
 X_train = X_train.iloc[:, 1:]
-#print(X_train.dtypes)
+print(X_train.dtypes)
 
 
 # check for missing data number
@@ -58,7 +62,7 @@ mno.matrix(X_train, figsize=(20, 20))
 cleanup_data = {'Term': {'Short Term': -1, 'Long Term': 1},
                 'Years in current job': {'< 1 year': 0, '1 year': 1, '2 years': 2, '3 years': 3, '4 years': 4,
                                          '5 years': 5, '6 years': 6, '7 years': 7, '8 years': 8, '9 years': 9, '10+ years': 10},
-                'Home Ownership': {'Rent': 0, 'Own Home': 1, 'HaveMortgage': 3, 'Home Mortgage': 4}}
+                'Home Ownership': {'Rent': 1, 'Own Home': 2, 'HaveMortgage': 3, 'Home Mortgage': 4}}
 X_train.replace(cleanup_data, inplace=True)
 #print(X_train.dtypes)
 
@@ -122,57 +126,72 @@ X_train[cols_to_norm] = X_train[cols_to_norm].apply(lambda x: (x - x.min())/(x.m
                                         ### Training
                     ### Now we are ready to test out different machine learning algorithms
 
-# in mind: logistic regression, random forest, SVM
+# in mind: logistic regression, random forest, EM, KNN
 # cross validation
-kf = StratifiedKFold(n_splits=5)
+kf = StratifiedKFold(n_splits=2)
 error = 0
 lr_error = 0
 rf_error = 0
 knn_error = 0
 EM_error = 0
 iteration = 1
-for train_index, test_index in kf.split(X_train, y_train):
+lr_para = ['none', 'l2']
+'''for lr in lr_para:
+    for train_index, test_index in kf.split(X_train, y_train):
+        X_cv_train, X_cv_test = X_train.iloc[train_index], X_train.iloc[test_index]
+        y_cv_train, y_cv_test = y_train.iloc[train_index], y_train.iloc[test_index]
+
+        # logistic regression
+        lr_clf = LogisticRegression(penalty=lr, max_iter=1000)
+        lr_clf.fit(X_cv_train, y_cv_train)
+        y_pred = lr_clf.predict(X_cv_test)
+        y_cv_test_lst = y_cv_test.values.tolist()
+
+        error = 0
+        for i in range(len(y_pred)):
+            if y_pred[i] != y_cv_test_lst[i]:
+                error += 1
+        print('interation{} \nlogistic regression accuracy {}%'.format(iteration, (1-error/len(y_pred))*100))
+        lr_error += error
+    print('\n\nlogisitc regression average error {}%, accuracy is {}%'.format(lr_error / 5 / len(y_pred) * 100, (1 - (lr_error / 5 / len(y_pred))) * 100))
+
+rf_max_depth = [None, 500, 100, 50]
+for depth in rf_max_depth:
+    for train_index, test_index in kf.split(X_train, y_train):
+        X_cv_train, X_cv_test = X_train.iloc[train_index], X_train.iloc[test_index]
+        y_cv_train, y_cv_test = y_train.iloc[train_index], y_train.iloc[test_index]
+        # random forest
+        error = 0
+        rf_clf = RandomForestClassifier(max_depth=depth)
+        rf_clf.fit(X_cv_train, y_cv_train)
+        y_pred = rf_clf.predict(X_cv_test)
+        y_cv_test_lst = y_cv_test.values.tolist()
+        for i in range(len(y_pred)):
+            if y_pred[i] != y_cv_test_lst[i]:
+                error += 1
+        rf_error += error
+        print('random forest accuracy {}%'.format((1-error/len(y_pred))*100))'''
+
+knn_para = [5, 10, 15, 20, 25]
+for knn in knn_para:
+    for train_index, test_index in kf.split(X_train, y_train):
+        X_cv_train, X_cv_test = X_train.iloc[train_index], X_train.iloc[test_index]
+        y_cv_train, y_cv_test = y_train.iloc[train_index], y_train.iloc[test_index]
+        # k nearest neighbor
+        error_knn = 0
+        neigh = KNeighborsClassifier(n_neighbors=knn)
+        neigh.fit(X_cv_train, y_cv_train)
+        y_pred = neigh.predict(X_cv_test)
+        y_cv_test_lst = y_cv_test.values.tolist()
+        for i in range(len(y_pred)):
+            if y_pred[i] != y_cv_test_lst[i]:
+                error_knn += 1
+        knn_error += error_knn
+        print('k nearest neighbor accuracy {}%'.format((1-error_knn/len(y_pred))*100))
+    
+'''for train_index, test_index in kf.split(X_train, y_train):
     X_cv_train, X_cv_test = X_train.iloc[train_index], X_train.iloc[test_index]
     y_cv_train, y_cv_test = y_train.iloc[train_index], y_train.iloc[test_index]
-
-    # logistic regression
-    lr_clf = LogisticRegression(max_iter=1000)
-    lr_clf.fit(X_cv_train, y_cv_train)
-    y_pred = lr_clf.predict(X_cv_test)
-    y_cv_test_lst = y_cv_test.values.tolist()
-
-    error = 0
-    for i in range(len(y_pred)):
-        if y_pred[i] != y_cv_test_lst[i]:
-            error += 1
-    print('interation{} \nlogistic regression accuracy {}%'.format(iteration, (1-error/len(y_pred))*100))
-    lr_error += error
-
-
-    # random forest
-    error = 0
-    rf_clf = RandomForestClassifier()
-    rf_clf.fit(X_cv_train, y_cv_train)
-    y_pred = rf_clf.predict(X_cv_test)
-    y_cv_test_lst = y_cv_test.values.tolist()
-    for i in range(len(y_pred)):
-        if y_pred[i] != y_cv_test_lst[i]:
-            error += 1
-    rf_error += error
-    print('random forest accuracy {}%'.format((1-error/len(y_pred))*100))
-
-    # k nearest neighbor
-    error_knn = 0
-    neigh = KNeighborsClassifier(n_neighbors=5)
-    neigh.fit(X_cv_train, y_cv_train)
-    y_pred = neigh.predict(X_cv_test)
-    y_cv_test_lst = y_cv_test.values.tolist()
-    for i in range(len(y_pred)):
-        if y_pred[i] != y_cv_test_lst[i]:
-            error_knn += 1
-    knn_error += error_knn
-    print('k nearest neighbor accuracy {}%'.format((1-error_knn/len(y_pred))*100))
-
     # Gaussian Mixture Model
     error_GM = 0
     g = BayesianGaussianMixture(n_components=2)
@@ -236,5 +255,5 @@ for i in range(len(y_pred)):
     if y_pred[i] != y_test_lst[i]:
         error += 1
 print(error)
-print('\nlogistic regression accuracy on test set {}%'.format((1 - error / len(y_pred)) * 100))
+print('\nlogistic regression accuracy on test set {}%'.format((1 - error / len(y_pred)) * 100))'''
 
