@@ -49,7 +49,7 @@ print(X_train.dtypes)
 # check for missing data number
 #print(X_train.isnull().sum())
 #print(y_train.isnull().sum()) # there is no missing data in y label
-mno.matrix(X_train, figsize=(20, 20))
+#mno.matrix(X_train, figsize=(20, 20))
 #plt.show()
 
 
@@ -129,20 +129,17 @@ X_train[cols_to_norm] = X_train[cols_to_norm].apply(lambda x: (x - x.min())/(x.m
 # in mind: logistic regression, random forest, EM, KNN
 # cross validation
 kf = StratifiedKFold(n_splits=2)
-error = 0
-lr_error = 0
-rf_error = 0
-knn_error = 0
 EM_error = 0
 iteration = 1
 lr_para = ['none', 'l2']
-'''for lr in lr_para:
+for lr in lr_para:
+    lr_error = 0
     for train_index, test_index in kf.split(X_train, y_train):
         X_cv_train, X_cv_test = X_train.iloc[train_index], X_train.iloc[test_index]
         y_cv_train, y_cv_test = y_train.iloc[train_index], y_train.iloc[test_index]
 
         # logistic regression
-        lr_clf = LogisticRegression(penalty=lr, max_iter=1000)
+        lr_clf = LogisticRegression(penalty=lr, max_iter=2500)
         lr_clf.fit(X_cv_train, y_cv_train)
         y_pred = lr_clf.predict(X_cv_test)
         y_cv_test_lst = y_cv_test.values.tolist()
@@ -151,18 +148,23 @@ lr_para = ['none', 'l2']
         for i in range(len(y_pred)):
             if y_pred[i] != y_cv_test_lst[i]:
                 error += 1
-        print('interation{} \nlogistic regression accuracy {}%'.format(iteration, (1-error/len(y_pred))*100))
+        #print('logistic regression accuracy {}%'.format((1-error/len(y_pred))*100))
         lr_error += error
-    print('\n\nlogisitc regression average error {}%, accuracy is {}%'.format(lr_error / 5 / len(y_pred) * 100, (1 - (lr_error / 5 / len(y_pred))) * 100))
+    print('parameter {}, logistic regression average error {}%, accuracy is {}%'.format(lr, lr_error / 2 / len(y_pred) * 100, (1 - (lr_error / 2 / len(y_pred))) * 100))
 
-rf_max_depth = [None, 500, 100, 50]
+plt.figure()
+plt.scatter(X_cv_train['Credit Score'], lr_clf.predict_proba(X_cv_train)[:, 1])
+plt.show()
+rf_max_depth = [500, 250, 100, 50]
+rf_max_depth = [ 50]
 for depth in rf_max_depth:
+    rf_error = 0
     for train_index, test_index in kf.split(X_train, y_train):
         X_cv_train, X_cv_test = X_train.iloc[train_index], X_train.iloc[test_index]
         y_cv_train, y_cv_test = y_train.iloc[train_index], y_train.iloc[test_index]
         # random forest
         error = 0
-        rf_clf = RandomForestClassifier(max_depth=depth)
+        rf_clf = RandomForestClassifier(n_estimators=depth)
         rf_clf.fit(X_cv_train, y_cv_train)
         y_pred = rf_clf.predict(X_cv_test)
         y_cv_test_lst = y_cv_test.values.tolist()
@@ -170,10 +172,15 @@ for depth in rf_max_depth:
             if y_pred[i] != y_cv_test_lst[i]:
                 error += 1
         rf_error += error
-        print('random forest accuracy {}%'.format((1-error/len(y_pred))*100))'''
-
-knn_para = [5, 10, 15, 20, 25]
+        #print('random forest accuracy {}%'.format((1-error/len(y_pred))*100))
+    print('parameter {}, random forest average error {}%, accuracy is {}%'.format(depth, rf_error / 2 / len(y_pred) * 100, (1 - (rf_error / 2 / len(y_pred))) * 100))
+plt.figure()
+plt.scatter(X_cv_train['Credit Score'], lr_clf.predict_proba(X_cv_train)[:, 1])
+plt.scatter(X_cv_train['Credit Score'], rf_clf.predict_proba(X_cv_train)[:, 1])
+plt.show()
+knn_para = [5, 10, 15, 20, 25, 50, 100]
 for knn in knn_para:
+    knn_error = 0
     for train_index, test_index in kf.split(X_train, y_train):
         X_cv_train, X_cv_test = X_train.iloc[train_index], X_train.iloc[test_index]
         y_cv_train, y_cv_test = y_train.iloc[train_index], y_train.iloc[test_index]
@@ -187,9 +194,11 @@ for knn in knn_para:
             if y_pred[i] != y_cv_test_lst[i]:
                 error_knn += 1
         knn_error += error_knn
-        print('k nearest neighbor accuracy {}%'.format((1-error_knn/len(y_pred))*100))
-    
-'''for train_index, test_index in kf.split(X_train, y_train):
+        #print('k nearest neighbor accuracy {}%'.format((1-error_knn/len(y_pred))*100))
+    print('parameter {}, k nearest neighbor average error {}%, accuracy is {}%'.format(knn, knn_error / 2 / len(y_pred) * 100, (1-(knn_error/2/len(y_pred)))*100 ))
+
+
+for train_index, test_index in kf.split(X_train, y_train):
     X_cv_train, X_cv_test = X_train.iloc[train_index], X_train.iloc[test_index]
     y_cv_train, y_cv_test = y_train.iloc[train_index], y_train.iloc[test_index]
     # Gaussian Mixture Model
@@ -202,13 +211,12 @@ for knn in knn_para:
         if y_pred[i] != y_cv_test_lst[i]:
             error_GM += 1
     EM_error += error_GM
-    print('EM estimator accuracy {}%'.format((1-error_GM/len(y_pred))*100))
-    iteration += 1
+    #print('EM estimator accuracy {}%'.format((1-error_GM/len(y_pred))*100))
     
-print('\n\nlogisitc regression average error {}%, accuracy is {}%'.format(lr_error/5/len(y_pred)*100, (1-(lr_error/5/len(y_pred)))*100 ))
-print('random forest average error {}%, accuracy is {}%'.format(rf_error/5/len(y_pred)*100, (1-(rf_error/5/len(y_pred)))*100 ))
-print('k nearest neighbor average error {}%, accuracy is {}%'.format(knn_error/5/len(y_pred)*100, (1-(knn_error/5/len(y_pred)))*100 ))
-print('EM estimator average error {}%, accuracy is {}%'.format(EM_error/5/len(y_pred)*100, (1-(EM_error/5/len(y_pred)))*100 ))
+#print('\n\nlogisitc regression average error {}%, accuracy is {}%'.format(lr_error/5/len(y_pred)*100, (1-(lr_error/5/len(y_pred)))*100 ))
+#print('random forest average error {}%, accuracy is {}%'.format(rf_error/5/len(y_pred)*100, (1-(rf_error/5/len(y_pred)))*100 ))
+#print('k nearest neighbor average error {}%, accuracy is {}%'.format(knn_error/5/len(y_pred)*100, (1-(knn_error/5/len(y_pred)))*100 ))
+print('EM estimator average error {}%, accuracy is {}%'.format(EM_error/2/len(y_pred)*100, (1-(EM_error/2/len(y_pred)))*100 ))
 joblib.dump(lr_clf, filename='logistic regression_model.sav')
 joblib.dump(rf_clf, filename='random forest_model.sav')
 joblib.dump(neigh, filename='k nearest neighbor_model.sav')
@@ -254,6 +262,6 @@ error = 0
 for i in range(len(y_pred)):
     if y_pred[i] != y_test_lst[i]:
         error += 1
-print(error)
-print('\nlogistic regression accuracy on test set {}%'.format((1 - error / len(y_pred)) * 100))'''
+#print(error)
+print('\nlogistic regression accuracy on test set {}%'.format((1 - error / len(y_pred)) * 100))
 

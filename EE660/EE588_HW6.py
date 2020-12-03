@@ -30,28 +30,11 @@ for i in range(len(features)):
 
 # random select test and training samples
 def softmax_loss_naive(W, X, y, reg):
-    """
-    Softmax loss function, naive implementation (with loops)
-    Inputs:
-    - W: C x D array of weights
-    - X: D x N array of data. Data are D-dimensional columns
-    - y: 1-dimensional array of length N with labels 0...K-1, for K classes
-    - reg: (float) regularization strength
-    Returns:
-    a tuple of:
-    - loss as single float
-    - gradient with respect to weights W, an array of same size as W
-    """
+
     # Initialize the loss and gradient to zero.
     loss = 0.0
     dW = np.zeros_like(W)
     l_w = np.zeros_like(W)
-    #############################################################################
-    # Compute the softmax loss and its gradient using explicit loops.           #
-    # Store the loss in loss and the gradient in dW. If you are not careful     #
-    # here, it is easy to run into numeric instability. Don't forget the        #
-    # regularization!                                                           #
-    #############################################################################
 
     # Get shapes
     num_classes = W.shape[0]
@@ -87,19 +70,19 @@ def softmax_loss_naive(W, X, y, reg):
     dW += reg*W
     return loss, dW
 
-for in_ in range(1,2):
+tot_error = 0
+for in_ in range(10):
     # random select test and training samples
     X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(super_features, labels, test_size=100)
     # initialize w
-    w = np.random.rand(10, 2049)
+    w = np.ones((10, 2049))
 
 
     X_train = np.transpose(X_train)
     y_train = y_train.astype(int)
     iteration = 0
-    while iteration < 1:
+    while iteration < 500:
         l, dw = softmax_loss_naive(w, X_train, y_train, 0.1)
-        print(l)
         w -= 0.01 * dw
         #print(0.01*dw)
         iteration += 1
@@ -121,8 +104,9 @@ for in_ in range(1,2):
 
         if max_index != int(y_test[i]):
             error += 1
-    print('trial{} error rate is {}%'.format(in_, error))
-
+    tot_error += error
+    print('trial{} error rate is {}'.format(in_, error/len(y_test)))
+print('average error {}'.format(tot_error/10/len(y_test)))
 
 ### C
 tot_iteration = 0
@@ -130,7 +114,7 @@ for i in range(1, 2):
     X_train, X_test, y_train, y_test = \
         sklearn.model_selection.train_test_split(super_features, labels, test_size=100)
     # initialize w
-    w = np.random.rand(10, 2049)
+    w = np.ones((10, 2049))
     X_train = np.transpose(X_train)
     y_train = y_train.astype(int)
     iteration = 0
@@ -139,7 +123,7 @@ for i in range(1, 2):
         l, dw= softmax_loss_naive(w, X_train, y_train, 0.1)
         w -= 0.01 * dw
         fro_squared = np.linalg.norm(dw, ord='fro')**2
-        print(fro_squared/(1+abs(l)))
+        #print(fro_squared/(1+abs(l)))
         if iteration <= 150:
             gradient_descent_lst.append(fro_squared/(1+abs(l)))
         if fro_squared/(1+abs(l)) <= 0.01:
@@ -147,9 +131,9 @@ for i in range(1, 2):
         iteration += 1
 
     tot_iteration += iteration
-    print('trail{}, iteration took {}'.format(i, iteration))
+    #print('trail{}, iteration took {}'.format(i, iteration))
 
-print('average iteration took {}'.format(tot_iteration/10))
+print('average iteration took {}'.format(tot_iteration/1))
 
 ### D
 # heavy ball
@@ -159,7 +143,7 @@ for i in range(1, 2):
     X_train, X_test, y_train, y_test = \
         sklearn.model_selection.train_test_split(super_features, labels, test_size=100)
     iteration = 0
-    w = np.random.rand(10, 2049)
+    w = np.ones((10, 2049))
     X_train = np.transpose(X_train)
     y_train = y_train.astype(int)
     heavy_ball_lst = []
@@ -173,19 +157,21 @@ for i in range(1, 2):
             diff = 0
         w -= 0.01 * dw - beta * diff
         fro_squared = np.linalg.norm(dw, ord='fro') ** 2
-        print(fro_squared / (1 + abs(l)))
+        #print(fro_squared / (1 + abs(l)))
         if iteration <= 150:
             heavy_ball_lst.append(fro_squared/(1+abs(l)))
         if fro_squared / (1 + abs(l)) <= 0.01:
             break
         iteration += 1
-    print(iteration)
-
+    tot_iteration += iteration
+    # print(iteration)
+print('average iteration took {}'.format(tot_iteration/1))
 
 plt.figure()
-t = np.linspace(1, 150, 150)
+t = list(range(1, 152))
 plt.plot(t, heavy_ball_lst)
 plt.plot(t, gradient_descent_lst)
+plt.legend(('heavy ball', 'gradient_descent'))
 plt.show()
 
 
