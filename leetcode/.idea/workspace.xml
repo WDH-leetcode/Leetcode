@@ -31,7 +31,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../EE660/Test.py" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.EE588_HW6">
+  <component name="RunManager" selected="Python.Main">
     <configuration name="EE588_HW6" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="leetcode" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -95,6 +95,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="Main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="leetcode" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../EE660" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../EE660/Main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="TEST" type="PythonConfigurationType" factoryName="Python">
       <module name="leetcode" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -137,42 +158,21 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="draw" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="leetcode" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../Flappy_Bird" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../Flappy_Bird/draw.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <list>
       <item itemvalue="Python.TEST" />
-      <item itemvalue="Python.draw" />
       <item itemvalue="Python.Test" />
       <item itemvalue="Python.HW9" />
       <item itemvalue="Python.EE588_HW6" />
       <item itemvalue="Python.EE660_Final_project" />
+      <item itemvalue="Python.Main" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Main" />
+        <item itemvalue="Python.EE660_Final_project" />
         <item itemvalue="Python.EE588_HW6" />
         <item itemvalue="Python.Test" />
-        <item itemvalue="Python.EE660_Final_project" />
         <item itemvalue="Python.HW9" />
-        <item itemvalue="Python.draw" />
       </list>
     </recent_temporary>
   </component>
@@ -211,22 +211,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="911" y="330" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1606421314314" />
-    <state width="929" height="292" key="GridCell.Tab.0.bottom" timestamp="1606947594375">
+    <state width="942" height="257" key="GridCell.Tab.0.bottom" timestamp="1606989644684">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="929" height="292" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1606947594375" />
-    <state width="929" height="292" key="GridCell.Tab.0.center" timestamp="1606947594375">
+    <state width="942" height="257" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1606989644684" />
+    <state width="942" height="257" key="GridCell.Tab.0.center" timestamp="1606989644684">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="929" height="292" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1606947594375" />
-    <state width="929" height="292" key="GridCell.Tab.0.left" timestamp="1606947594375">
+    <state width="942" height="257" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1606989644684" />
+    <state width="942" height="257" key="GridCell.Tab.0.left" timestamp="1606989644684">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="929" height="292" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1606947594375" />
-    <state width="929" height="292" key="GridCell.Tab.0.right" timestamp="1606947594375">
+    <state width="942" height="257" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1606989644684" />
+    <state width="942" height="257" key="GridCell.Tab.0.right" timestamp="1606989644684">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="929" height="292" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1606947594375" />
+    <state width="942" height="257" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1606989644684" />
     <state width="1186" height="346" key="GridCell.Tab.1.bottom" timestamp="1606716385866">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -251,6 +251,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="753" y="267" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1606527806016" />
+    <state x="523" y="245" width="958" height="741" key="dock-window-1" timestamp="1606989645586">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="523" y="245" width="958" height="741" key="dock-window-1/0.0.1920.1040@0.0.1920.1040" timestamp="1606989645586" />
     <state x="913" y="230" width="672" height="678" key="search.everywhere.popup" timestamp="1606432302271">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
