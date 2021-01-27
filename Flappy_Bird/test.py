@@ -1,1 +1,2 @@
-pip install PIL
+class Solution():
+    def __init__(self):
