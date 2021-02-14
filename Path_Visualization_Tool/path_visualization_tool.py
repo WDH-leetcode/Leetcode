@@ -96,7 +96,7 @@ def h(p1, p2):
     return abs(x1-x2) + abs(y1-y2)
 
 
-def reconstruct_path(came_from, current ,draw):
+def reconstruct_path(came_from, current, draw):
     while current in came_from:
         current = came_from[current]
         current.make_path()
@@ -185,7 +185,7 @@ def get_clicked_pos(pos, rows, width):
 
 
 def main(win, width):
-    ROWS = 60
+    ROWS = 50
     grid = make_grid(ROWS, width)
 
     start = None
